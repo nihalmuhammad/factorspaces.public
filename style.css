@@ -945,3 +945,15 @@ button:focus-visible { outline:3px solid var(--accent); outline-offset:4px; }
 .dialog-email { display:block; margin-top:22px; color:var(--accent); font-size:clamp(12px,3.8vw,18px); overflow-wrap:anywhere; font-weight:bold; }
 .contact-options { display:flex; flex-wrap:wrap; gap:16px 22px; align-items:center; margin-top:24px; }
 #copy-email { padding:10px 14px; font:inherit; font-size:13px; border:1px solid var(--line); border-radius:5px; cursor:pointer; background:white; color:var(--ink); }
+
+#enquiry-form { display:grid; gap:15px; margin-top:22px; }
+#enquiry-form label { display:grid; gap:6px; font-size:13px; font-weight:700; }
+#enquiry-form label>span { font-weight:400; color:var(--muted); }
+#enquiry-form input,#enquiry-form select,#enquiry-form textarea { width:100%; padding:11px 12px; border:1px solid #c9c3d2; border-radius:5px; background:white; color:var(--ink); font:inherit; font-size:16px; }
+#enquiry-form textarea { resize:vertical; }
+#enquiry-form :is(input,select,textarea):focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.form-trap { position:absolute; left:-10000px; }
+.form-privacy,#form-status { font-size:12px; color:var(--muted); line-height:1.6; margin:0; }
+.form-privacy a,#form-status a { color:var(--accent); text-decoration:underline; overflow-wrap:anywhere; }
+.form-submit { border:0; font-family:inherit; min-height:48px; justify-content:center; cursor:pointer; }
+.form-submit:disabled { opacity:.55; cursor:default; }

@@ -59,31 +59,28 @@ if ('IntersectionObserver' in window) {
   document.querySelectorAll('.product-card, .service-card, .about-copy').forEach(card => observer.observe(card));
 }
 
-// Email-handler-independent enquiry choices; nothing is sent automatically.
+// Set a verified form endpoint before enabling live delivery.
+
 const contactDialog = document.querySelector('#contact-dialog');
-if (contactDialog && typeof contactDialog.showModal === 'function') {
+const enquiryForm = document.querySelector('#enquiry-form');
+const formStatus = document.querySelector('#form-status');
+const submitButton = enquiryForm.querySelector('[type="submit"]');
+
+if (typeof contactDialog.showModal === 'function') {
   document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
     if (contactDialog.contains(link)) return;
     link.addEventListener('click', event => {
       event.preventDefault();
-      const destination = new URL(link.href);
-      const subject = destination.searchParams.get('subject') || 'FactorSpaces enquiry';
-      document.querySelector('#contact-title').textContent = subject;
-      document.querySelector('#email-compose').href = link.href;
-      const gmail = new URL('https://mail.google.com/mail/');
-      gmail.search = new URLSearchParams({ view: 'cm', fs: '1', to: 'factorspacesllc@gmail.com', su: subject });
-      document.querySelector('#gmail-compose').href = gmail.href;
-      document.querySelector('#copy-status').textContent = '';
+      const subject = new URL(link.href).searchParams.get('subject') || '';
+      const mappings = [['FactorPOS','FactorPOS pilot'], ['Signage','Dunch Signage setup'], ['Dunch','Dunch menu setup'], ['WhatsApp','WhatsApp Business optimisation'], ['Google','Google Business Profile optimisation'], ['UGC','UGC creator campaign'], ['Prototype','Prototype design and production']];
+      enquiryForm.elements.service.value = mappings.find(([key]) => subject.includes(key))?.[1] || 'General enquiry';
       contactDialog.showModal();
     });
   });
   contactDialog.querySelector('.dialog-close').addEventListener('click', () => contactDialog.close());
-  document.querySelector('#copy-email').addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText('factorspacesllc@gmail.com');
-      document.querySelector('#copy-status').textContent = 'Email address copied.';
-    } catch {
-      document.querySelector('#copy-status').textContent = 'Select and copy the email address above.';
-    }
-  });
 }
+enquiryForm.addEventListener('submit', () => {
+  enquiryForm.elements._subject.value = `FactorSpaces enquiry: ${enquiryForm.elements.service.value}`;
+  submitButton.textContent = 'Continuing…';
+});
+window.addEventListener('pageshow', () => { submitButton.textContent = 'Send enquiry'; });
