@@ -58,3 +58,32 @@ if ('IntersectionObserver' in window) {
   }, { threshold: 0.12 });
   document.querySelectorAll('.product-card, .service-card, .about-copy').forEach(card => observer.observe(card));
 }
+
+// Email-handler-independent enquiry choices; nothing is sent automatically.
+const contactDialog = document.querySelector('#contact-dialog');
+if (contactDialog && typeof contactDialog.showModal === 'function') {
+  document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
+    if (contactDialog.contains(link)) return;
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      const destination = new URL(link.href);
+      const subject = destination.searchParams.get('subject') || 'FactorSpaces enquiry';
+      document.querySelector('#contact-title').textContent = subject;
+      document.querySelector('#email-compose').href = link.href;
+      const gmail = new URL('https://mail.google.com/mail/');
+      gmail.search = new URLSearchParams({ view: 'cm', fs: '1', to: 'factorspacesllc@gmail.com', su: subject });
+      document.querySelector('#gmail-compose').href = gmail.href;
+      document.querySelector('#copy-status').textContent = '';
+      contactDialog.showModal();
+    });
+  });
+  contactDialog.querySelector('.dialog-close').addEventListener('click', () => contactDialog.close());
+  document.querySelector('#copy-email').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('factorspacesllc@gmail.com');
+      document.querySelector('#copy-status').textContent = 'Email address copied.';
+    } catch {
+      document.querySelector('#copy-status').textContent = 'Select and copy the email address above.';
+    }
+  });
+}
